@@ -1,0 +1,8 @@
+# CPU build. On a Colab GPU runtime install pycolmap-cuda12 instead, so SIFT runs on the GPU.
+pycolmap>=4.2
+opencv-python
+numpy
+matplotlib
+# Training only (needs an NVIDIA GPU; Colab provides torch). gsplat compiles its CUDA kernels on first use.
+torch
+gsplat==1.5.3
