@@ -1,0 +1,5 @@
+numpy
+opencv-python
+scipy
+# only for --cameras pointing at a COLMAP model (run_sfm.py's dataset/sparse/0)
+pycolmap>=4.2
