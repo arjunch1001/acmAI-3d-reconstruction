@@ -6,6 +6,14 @@ import gsplat
 from gsplat import rasterization
 
 assert torch.cuda.is_available(), "No CUDA GPU: Runtime -> Change runtime type -> T4 GPU"
+
+# Load the prebuilt GPU module directly. If it can't load, gsplat would quietly fall back to
+# compiling from source (the 20+ minute hang this setup exists to avoid), so stop here instead.
+try:
+    from gsplat import csrc  # noqa: F401
+except ImportError as e:
+    raise SystemExit(f"gsplat's prebuilt GPU module didn't load, so it would try to compile: {e}")
+
 start = time.perf_counter()
 n = 10_000
 means = torch.randn(n, 3, device="cuda") + torch.tensor([0, 0, 5.0], device="cuda")
