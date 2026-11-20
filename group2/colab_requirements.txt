@@ -1,7 +1,7 @@
 # Exact package versions for training on Colab (Linux, Python 3.10). Every package is prebuilt:
 # gsplat 1.5.3+pt24cu124 ships compiled GPU code (sm_70-90, incl. the T4's sm_75) for torch 2.4 / CUDA 12.4,
 # so nothing compiles at runtime. Regenerated from: torch==2.4.1+cu124, gsplat==1.5.3+pt24cu124, pycolmap==4.2.1,
-# opencv-python-headless, numpy<2.3 with uv pip compile --python-version 3.10 --python-platform x86_64-manylinux_2_28
+# packaging (gsplat imports it at load time but does not declare it), opencv-python-headless, numpy<2.3 with uv pip compile --python-version 3.10 --python-platform x86_64-manylinux_2_28
 # --index-strategy unsafe-best-match --extra-index-url https://download.pytorch.org/whl/cu124
 # --extra-index-url https://docs.gsplat.studio/whl/pt24cu124
 filelock==4.1.0
@@ -29,6 +29,7 @@ nvidia-nccl-cu12==2.20.5
 nvidia-nvjitlink-cu12==12.4.99
 nvidia-nvtx-cu12==12.4.99
 opencv-python-headless==5.1.0.95
+packaging==26.3
 pycolmap==4.2.1
 pygments==2.21.0
 rich==15.0.0
