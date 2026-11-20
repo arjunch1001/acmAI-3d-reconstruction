@@ -84,6 +84,8 @@ def load_dataset(data, downscale, holdout):
 
 def to_device(views, device):
     """Photos stay uint8 on the GPU (4x smaller than float); converted one at a time when used."""
+    if not views:  # e.g. no held-out test views when --holdout is 0
+        return None
     return {
         "pixels": torch.from_numpy(np.stack([v["pixels"] for v in views])).to(device),
         "K": torch.tensor(np.stack([v["K"] for v in views]), dtype=torch.float32, device=device),
@@ -221,7 +223,7 @@ def save_preview(params, data, idx, sh_degree, path):
 
 @torch.no_grad()
 def evaluate(params, data, sh_degree):
-    if len(data["pixels"]) == 0:
+    if data is None:
         return None
     black = torch.zeros(3, device=data["K"].device)
     scores = [psnr(render(params, data, i, sh_degree, black)[0].clamp(0, 1), data["pixels"][i].float() / 255)
