@@ -1,6 +1,7 @@
 import argparse
 import shutil
 import time
+import zipfile
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -125,11 +126,18 @@ def main():
         for f in (dataset / "sparse").glob("*.bin"):
             f.rename(dataset / "sparse" / "0" / f.name)
 
+    # 5. One file to upload to the GPU machine: just what training reads (photos + cameras).
+    archive = work / "dataset.zip"
+    with zipfile.ZipFile(archive, "w") as z:  # stored, not compressed: JPEGs are already compressed
+        for f in sorted((dataset / "images").iterdir()) + sorted((dataset / "sparse" / "0").iterdir()):
+            z.write(f, f.relative_to(dataset).as_posix())
+
     rec = models[best]
     print(f"\nModels: {len(models)}   largest (sparse/{best}): {rec.num_reg_images()}/{len(names)} images registered, "
           f"{rec.num_points3D()} points, reprojection error {rec.compute_mean_reprojection_error():.2f}px")
     print("Time: " + ", ".join(f"{k} {v:.0f}s" for k, v in times.items()) + f", total {sum(times.values()):.0f}s")
     print(f"Training dataset: {dataset}   (next: python group2/sfm_report.py {work} {images})")
+    print(f"Upload to Colab: {archive} ({archive.stat().st_size / 1e6:.1f} MB)")
 
 
 if __name__ == "__main__":
